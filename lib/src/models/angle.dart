@@ -15,17 +15,7 @@ class Angle {
   }
 
   double asRad() {
-    // This will effectively constrain all angles to between -360 and 360
-    // the reason we keep negatives is for atan2 and the reason we constrain
-    // is for accuracy of trigonmetric functions. Probably unecessary but
-    // a good idea all the same.
     return rads;
-
-    // if (rads < 0) {
-    //   return -(rads.abs() % (2 * pi));
-    // }
-
-    // return rads % (2 * pi);
   }
 
   double asDeg() {
@@ -34,26 +24,23 @@ class Angle {
 
   DMS asDMS() {
     double degrees = asDeg();
-    double minutes = ((degrees - degrees.floorToDouble()) * 60).floorToDouble();
-    double seconds =
-        ((((degrees - degrees.floorToDouble()) * 60) - minutes) * 60)
-            .floorToDouble();
+    double minutes = (degrees - degrees.floor()) * 60;
+    double seconds = (minutes - minutes.floor()) * 60;
+
     return DMS(
       degrees: degrees.floorToDouble(),
-      minutes: minutes,
-      seconds: seconds,
+      minutes: minutes.floorToDouble(),
+      seconds: seconds.floorToDouble(),
     );
   }
 
   HMS asHMS() {
     double degrees = asDeg();
-    double hours = (degrees / 15.0).floorToDouble();
-    double minutes = ((degrees - degrees.floorToDouble()) * 60).floorToDouble();
-    double seconds =
-        ((((degrees - degrees.floorToDouble()) * 60) - minutes) * 60)
-            .floorToDouble();
+    double hours = (degrees / 15.0);
+    double minutes = (hours - hours.floor()) * 60;
+    double seconds = (minutes - minutes.floor()) * 60;
 
-    return HMS(hours: hours, minutes: minutes, seconds: seconds);
+    return HMS(hours: hours.floorToDouble(), minutes: minutes.floorToDouble(), seconds: seconds.floorToDouble());
   }
 
   Angle rev() {

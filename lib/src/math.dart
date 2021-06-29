@@ -1,11 +1,15 @@
 import 'dart:math';
 
-double sumList(List<double> values) {
-  double result = 0.0;
-  for (var value in values) {
-    result += value;
-  }
-  return result;
+double rads(double degrees) {
+  return (degrees / 180) * pi;
+}
+
+double deg(double rads) {
+  return (rads * (180 / pi));
+}
+
+double round(double value, double decimals) {
+  return (value * pow(10, decimals)).roundToDouble() / pow(10, decimals);
 }
 
 double sumAndExponentiallyMultiply(List<double> values, double multiplier) {
@@ -18,9 +22,4 @@ double sumAndExponentiallyMultiply(List<double> values, double multiplier) {
     }
   }
   return result;
-}
-
-double roundDouble(double value, int places) {
-  double mod = pow(10.0, places).toDouble();
-  return ((value * mod).round().toDouble() / mod);
 }

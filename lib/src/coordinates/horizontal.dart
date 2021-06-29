@@ -1,10 +1,10 @@
-import 'angle.dart';
+import '../models/angle.dart';
 
-class HorizontalCoordinate {
+class Horizontal {
   final Angle altitude;
   final Angle azimuth;
 
-  HorizontalCoordinate({
+  Horizontal({
     required this.altitude,
     required this.azimuth,
   });

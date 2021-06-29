@@ -3,9 +3,13 @@ class HMS {
   final double minutes;
   final double seconds;
 
-  HMS({required this.hours, required this.minutes, required this.seconds});
+  HMS({
+    required this.hours,
+    required this.minutes,
+    required this.seconds,
+  });
 
   String toStr() {
-    return '${hours}h ${minutes}m ${seconds}s';
+    return '${this.hours}h ${this.minutes}m ${this.seconds}s';
   }
 }
