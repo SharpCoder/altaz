@@ -1,10 +1,14 @@
 import '../models/angle.dart';
 
-class Ecliptic {
+class GPSCoordinate {
   final Angle latitude;
   final Angle longitude;
+  static const GPSCoordinate ZERO = const GPSCoordinate(
+    latitude: Angle.ZERO,
+    longitude: Angle.ZERO,
+  );
 
-  Ecliptic({
+  const GPSCoordinate({
     required this.latitude,
     required this.longitude,
   });

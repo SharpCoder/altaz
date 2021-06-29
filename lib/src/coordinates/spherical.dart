@@ -1,11 +1,11 @@
 import '../models/angle.dart';
 
-class Spherical {
+class SphericalCoordinate {
   final double r;
   final Angle RA;
   final Angle Decl;
 
-  Spherical({
+  SphericalCoordinate({
     required this.r,
     required this.RA,
     required this.Decl,

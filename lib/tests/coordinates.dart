@@ -8,7 +8,7 @@ import '../src/coordinates/spherical.dart';
 void main() {
   
   test("Spherical to Ecliptic Conversion", () {
-    var sol = Spherical(
+    var sol = SphericalCoordinate(
       RA: Angle.fromDegrees(90.0),
       Decl: Angle.ZERO,
       r: 1.0,

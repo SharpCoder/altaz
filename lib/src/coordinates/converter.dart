@@ -6,16 +6,16 @@ import 'spherical.dart';
 import 'horizontal.dart';
 import 'gps.dart';
 
-Rectangular sphereToRect(Spherical sphere) {
-  return Rectangular(
+RectangularCoordinate sphereToRect(SphericalCoordinate sphere) {
+  return RectangularCoordinate(
     x: Angle(rads: sphere.r * cos(sphere.RA.asRad()) * cos(sphere.Decl.asRad())),
     y: Angle(rads: sphere.r * sin(sphere.RA.asRad()) * cos(sphere.Decl.asRad())),
     z: Angle(rads: sphere.r * sin(sphere.Decl.asRad())),
   );
 }
 
-Spherical rectToSphere(Rectangular rect) {
-  return Spherical(
+SphericalCoordinate rectToSphere(RectangularCoordinate rect) {
+  return SphericalCoordinate(
     r: sqrt(pow(rect.x.asRad(), 2) + pow(rect.y.asRad(), 2) + pow(rect.z.asRad(), 2)),
     RA: Angle(rads: atan2( rect.y.asRad(), rect.x.asRad())).rev(),
     Decl: Angle(rads: atan2(rect.z.asRad(), sqrt(pow(rect.x.asRad(), 2) + pow(rect.y.asRad(), 2)))),
@@ -27,8 +27,8 @@ Spherical rectToSphere(Rectangular rect) {
  * axis through the angle of oblecl. In other words, convert ecliptic to
  * equatorial.
  */
-Rectangular rotateAroundX(Rectangular rect, Angle oblecl) {
-  return Rectangular(
+RectangularCoordinate rotateAroundX(RectangularCoordinate rect, Angle oblecl) {
+  return RectangularCoordinate(
     x: rect.x,
     y: Angle(rads: rect.y.asRad() * cos(oblecl.asRad()) - rect.z.asRad() * sin(oblecl.asRad())),
     z: Angle(rads: rect.y.asRad() * sin(oblecl.asRad()) + rect.z.asRad() * cos(oblecl.asRad()))
@@ -40,7 +40,7 @@ Rectangular rotateAroundX(Rectangular rect, Angle oblecl) {
  * to Horizontal (Alt/Az), while adjusting for the local hour angle
  * at an instant.
  */
-Horizontal sphereToHorizontal(GPS gps, Spherical target, DateTime instant) {
+HorizontalCoordinate sphereToHorizontal(GPSCoordinate gps, SphericalCoordinate target, DateTime instant) {
   Angle hourAngle = calculateHourAngle(instant, gps.longitude, target.RA);
   double sinAlt = sin(target.Decl.asRad()) * sin(gps.latitude.asRad()) +
       cos(target.Decl.asRad()) *
@@ -56,7 +56,7 @@ Horizontal sphereToHorizontal(GPS gps, Spherical target, DateTime instant) {
     azimuth = (2 * pi) - azimuth;
   }
 
-  return Horizontal(
+  return HorizontalCoordinate(
       altitude: Angle(rads: altitude), 
       azimuth: Angle(rads: azimuth)
   );

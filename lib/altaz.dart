@@ -11,6 +11,7 @@ export 'src/coordinates/spherical.dart';
 export 'src/coordinates/converter.dart';
 
 // Specific planets
+export 'src/solar/sol.dart';
 export 'src/solar/moon.dart';
 export 'src/solar/mercury.dart';
 export 'src/solar/venus.dart';

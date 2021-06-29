@@ -68,28 +68,28 @@ abstract class Body {
     );
   }
 
-  double _dist(Rectangular xyz) {
+  double _dist(RectangularCoordinate xyz) {
     return sqrt(pow(xyz.x.asRad(), 2) + pow(xyz.y.asRad(), 2));
   }
 
-  Angle _trueAnomaly(Rectangular xyz) {
+  Angle _trueAnomaly(RectangularCoordinate xyz) {
     return Angle(rads: atan2( xyz.y.asRad(), xyz.x.asRad()));
   }
 
-  Rectangular asRect() {
+  RectangularCoordinate asRect() {
     var E = _E();
-    return Rectangular(
+    return RectangularCoordinate(
       x: Angle(rads: a * (cos(E.asRad()) - e)),
       y: Angle(rads: a * sin(E.asRad()) * sqrt(1 - pow(e, 2))),
       z: Angle.ZERO,
     );
   }
 
-  Rectangular asEclip() {
+  RectangularCoordinate asEclip() {
     var xyz = asRect();
     var r = _dist(xyz);
     var v = _trueAnomaly(xyz);
-    return Rectangular(
+    return RectangularCoordinate(
       x: Angle(rads: r * ( cos(N.asRad()) * cos(v.asRad()+w.asRad()) - sin(N.asRad()) * sin(v.asRad()+w.asRad()) * cos(i.asRad()) )),
       y: Angle(rads: r * ( sin(N.asRad()) * cos(v.asRad()+w.asRad()) + cos(N.asRad()) * sin(v.asRad()+w.asRad()) * cos(i.asRad()) )),
       z: Angle(rads: r * sin(v.asRad() + w.asRad()) * sin(i.asRad())),
@@ -100,11 +100,11 @@ abstract class Body {
    * This will return the rectangular coordinates of the sun
    * in a not-super-efficient way. Use with caution.
    */
-  Rectangular solRect() {
+  RectangularCoordinate solRect() {
     return Sol(d).asEclip();
   }
 
-  Spherical asSphere() {
+  SphericalCoordinate asSphere() {
     var xyz = asRect();
     var r = _dist(xyz);
     var v = _trueAnomaly(xyz);
@@ -136,7 +136,7 @@ abstract class Body {
         print("zSol ${xyzSol.z.asRad()}");
       }
 
-      var xyzGeo = Rectangular(
+      var xyzGeo = RectangularCoordinate(
         x: Angle(rads: xyzSol.x.asRad() + xyzEclip.x.asRad()),
         y: Angle(rads: xyzSol.y.asRad() + xyzEclip.y.asRad()),
         z: Angle(rads: xyzSol.z.asRad() + xyzEclip.z.asRad()),

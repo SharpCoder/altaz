@@ -1,11 +1,11 @@
 import '../models/angle.dart';
 
-class Rectangular {
+class RectangularCoordinate {
   final Angle x;
   final Angle y;
   final Angle z;
 
-  Rectangular({
+  RectangularCoordinate({
     required this.x,
     required this.y,
     required this.z,
