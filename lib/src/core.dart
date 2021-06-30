@@ -7,6 +7,7 @@
 */
 import 'dart:math';
 import 'models/angle.dart';
+import 'solar/sol.dart';
 
 double rads(double degrees) {
   return (degrees / 180) * pi;
@@ -63,44 +64,18 @@ double julianCenturiesFromEpoch2000(double julianDays) {
   return 10 * julianMillenniaFromEpoch2000(julianDays);
 }
 
-Angle calculateLocalMeanSiderealTime(DateTime instant, Angle longitude) {
-  // Verify we're always working with UTC since this function is calculating
-  // position at greenwich
+Angle calculateHourAngle(DateTime instant, Angle longitude, Angle RA) {
+    // Get the current mean longitude of the sun
   if (!instant.isUtc) {
     instant = instant.toUtc();
   }
+  
+  var JD = instantToDaysJulian(instant);
+  var d = julianToDayNumber(JD);
+  var sol = Sol(d);
 
-  double julianDays = instantToDaysJulian(instant);
-  double centuryTime = julianToCenturyTime(julianDays);
-
-  // Mean sidereal time (in degrees) at greenwich for an instant.
-  double LMST = 280.46061837 +
-      360.98564736629 * (julianDays - 2451545.0) +
-      0.000387933 * pow(centuryTime, 2) -
-      (pow(centuryTime, 3) / 38710000.0);
-
-  // Adjust the location (which is already represented in a degree decimal).
-  LMST += longitude.asDeg();
-
-  // Bring it within range.
-  double range = 360.0;
-  while (LMST < 0.0 || LMST > range) {
-    if (LMST > range)
-      LMST -= range;
-    else
-      LMST += range;
-  }
-
-  // Now we have the LMST
-  return Angle.fromDegrees(LMST);
-}
-
-Angle calculateHourAngle(DateTime instant, Angle longitude, Angle ra) {
-  Angle result = calculateLocalMeanSiderealTime(instant, longitude);
-  double degrees = result.asDeg();
-  if (degrees < 0) {
-    degrees += 360;
-  }
-
-  return Angle.fromDegrees(degrees);
+  var GMST0 = Angle.fromDegrees(sol.L.asDeg() + 180.0).rev().asDeg() / 15.0; // Hours
+  var SIDTIME = GMST0 + timeToDec(instant.hour.toDouble(), instant.minute.toDouble(), instant.second.toDouble()) + (longitude.asDeg() / 15.0);
+  var HA = SIDTIME - (RA.asDeg() / 15.0);
+  return Angle.fromDegrees(HA * 15.0);
 }

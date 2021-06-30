@@ -41,20 +41,18 @@ RectangularCoordinate rotateAroundX(RectangularCoordinate rect, Angle oblecl) {
  * at an instant.
  */
 HorizontalCoordinate sphereToHorizontal(GPSCoordinate gps, SphericalCoordinate target, DateTime instant) {
-  Angle hourAngle = calculateHourAngle(instant, gps.longitude, target.RA);
-  double sinAlt = sin(target.Decl.asRad()) * sin(gps.latitude.asRad()) +
-      cos(target.Decl.asRad()) *
-          cos(gps.latitude.asRad()) *
-          cos(hourAngle.asRad());
-  double altitude = asin(sinAlt);
-  double cosA =
-      (sin(target.Decl.asRad()) - (sinAlt * sin(gps.latitude.asRad()))) /
-          (cos(altitude) * cos(gps.latitude.asRad()));
-  double azimuth = acos(cosA);
+  Angle HA = calculateHourAngle(instant, gps.longitude, target.RA);
+  var x = cos(HA.asRad()) * cos(target.Decl.asRad());  
+  var y = sin(HA.asRad()) * cos(target.Decl.asRad());
+  var z = sin(target.Decl.asRad());
 
-  if (sin(hourAngle.asRad()) >= 0) {
-    azimuth = (2 * pi) - azimuth;
-  }
+  var d90 = rads(90);
+  var xhor = x * cos(d90 - gps.latitude.asRad()) - z * sin(d90 - gps.latitude.asRad());
+  var yhor = y;
+  var zhor = x * sin(d90 - gps.latitude.asRad()) + z * cos(d90 - gps.latitude.asRad());
+
+  var azimuth = atan2(yhor, xhor) + pi;
+  var altitude = atan2(zhor, sqrt(pow(xhor, 2) + pow(yhor, 2)));
 
   return HorizontalCoordinate(
       altitude: Angle(rads: altitude), 
