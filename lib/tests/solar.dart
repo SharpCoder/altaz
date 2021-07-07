@@ -10,6 +10,12 @@ void main() {
   var daysJulian = instantToDaysJulian(instant);
   var d = julianToDayNumber(daysJulian);
 
+  test('Historical magnitude of venus', () {
+    var venus = Venus(d);
+    var mag = venus.magnitude();
+    print(mag);
+  });
+
 
   test('Historical position of sol', () {
     var sol = Sol(d);
@@ -53,5 +59,14 @@ void main() {
     var raDec = venus.asSphere();
     print(raDec.RA.asHMS().toStr());
     print(raDec.Decl.asDMS().toStr());
+  });
+
+  test('Current magnitude of venus', () {
+    var instant = DateTime.now().toUtc();
+    var daysJulian = instantToDaysJulian(instant);
+    var d = julianToDayNumber(daysJulian);
+    var venus = Venus(d);
+    var mag = venus.magnitude();
+    print(mag);
   });
 }

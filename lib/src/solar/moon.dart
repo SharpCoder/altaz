@@ -11,5 +11,6 @@ class Moon extends Body {
     e: [0.054900],
     M: [115.3654, 13.0649929509],
     orbitsEarth: true,
+    s: 1.0,
   );
 }

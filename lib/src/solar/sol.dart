@@ -11,5 +11,11 @@ class Sol extends Body {
     e: [0.016709, -1.151E-9],
     M: [356.0470, 0.9856002585],
     orbitsEarth: true, // we suspend disbelief, for math
+    s: 0.0,
   );
+
+  @override
+  double magnitude() {
+    return -26.74;
+  }
 }

@@ -1,7 +1,9 @@
 import 'dart:math';
+
 import 'sol.dart';
 import '../math.dart';
 import '../models/angle.dart';
+import '../models/planetaryAttributes.dart';
 import '../coordinates/spherical.dart';
 import '../coordinates/rectangular.dart';
 import '../coordinates/converter.dart';
@@ -25,6 +27,7 @@ abstract class Body {
   late final Angle M; // mean anomaly
   late final Angle L; // mean longitude
   late final Angle oblecl; // oblequity of the ecliptic 
+  late final double s; // Distance from the sun
   final bool orbitsEarth; // If true, this body is simulated to orbit the earth
 
   Body ({
@@ -35,6 +38,7 @@ abstract class Body {
     required List<double> a,
     required List<double> e,
     required List<double> M,
+    required this.s,
     this.orbitsEarth = false,
   }) {
     this.N = Angle.fromDegrees(sumAndExponentiallyMultiply(N, d));
@@ -145,5 +149,42 @@ abstract class Body {
       var equatorial = rotateAroundX(xyzGeo, oblecl);
       return rectToSphere(equatorial);
     }
+  }
+
+  PlanetaryAttributes planetaryAttributes() {
+
+    // Heliocentric (sun-centered)
+    var xyz = asRect();
+    var sunR = _dist(xyz);
+
+    // Geocentric (earth-centered)
+    var geoR = asSphere().r;
+
+    // Sun - Earth
+    // var xyzSol = solRect();
+    // var xyzSunEarth = RectangularCoordinate(
+    //   x: Angle(rads: xyzSol.x.asRad() + xyzEclip.x.asRad()),
+    //   y: Angle(rads: xyzSol.y.asRad() + xyzEclip.y.asRad()),
+    //   z: Angle(rads: xyzSol.z.asRad() + xyzEclip.z.asRad()),
+    // );
+    var sunGeoR = s;// _dist(rotateAroundX(xyzSunEarth, oblecl));
+
+    double phaseAngle = acos(
+      (sunR * sunR + geoR * geoR - sunGeoR * sunGeoR) /
+      (2 * sunR * geoR)
+    );
+    
+
+    return PlanetaryAttributes(
+      geocentricDistance: sunR,
+      heliocentricDistance: geoR,
+      elongation: Angle(rads: 0.0),
+      phaseAngle: Angle(rads: phaseAngle),
+      phase: 0.0,
+    );
+  }
+
+  double magnitude() {
+    throw UnimplementedError();
   }
 }

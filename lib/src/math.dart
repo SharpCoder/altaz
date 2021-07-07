@@ -1,5 +1,7 @@
 import 'dart:math';
 
+double log10(num x) => log(x) / ln10;
+
 double rads(double degrees) {
   return (degrees / 180) * pi;
 }
